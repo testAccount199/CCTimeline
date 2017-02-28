@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using NAudio.Gui;
 using NAudio.Wave;
 using Timeline.Annotations;
+using Color = System.Drawing.Color;
 
 namespace Timeline
 {
@@ -63,7 +64,7 @@ namespace Timeline
 
                 ScrollTo(scrollPosition);
 
-                var caption = Timeline.SelectedCaption;
+                var caption = Timeline.PlaybackCaption;
 
                 if (caption != null)
                 {
@@ -78,6 +79,7 @@ namespace Timeline
             });
 
             var viewer = new WaveViewer();
+            viewer.BackColor = Color.LightGray;
             viewer.WaveStream = new WaveFileReader(@"C:\Users\Amichai\Desktop\The Zahir.wav");
 
             this.Host.Child = viewer;
@@ -184,5 +186,22 @@ namespace Timeline
 
             overlay.CaptionValue = caption.Text;
         }
+
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete && !IsPlaying)
+            {
+                var result = MessageBox.Show(this, "Are you sure you want to delete the selected caption?", "Warning", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Timeline.DeleteSelectedCaption();
+                }
+            }
+        }
     }
+
+
+    ///TODO: Play/Pause/Stop button icons
+    /// Insert new caption
+    /// waveform background color
 }

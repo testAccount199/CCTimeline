@@ -43,12 +43,12 @@ namespace Timeline
 
         public double GetScrollPosition(TimeSpan time)
         {
-            return time.TotalMilliseconds/22.33d*(Zoom/100d);
+            return time.TotalMilliseconds/22.302d*(Zoom/100d);
         }
 
         public double GetPlayerHeadPosition(TimeSpan time)
         {
-            return .1;
+            return 0;
         }
     }
 }

@@ -7,7 +7,7 @@ using Timeline.Annotations;
 
 namespace Timeline
 {
-    public sealed class Caption : INotifyPropertyChanged
+    public sealed class Caption : INotifyPropertyChanged, IDisposable
     {
         private readonly TimelineLayout _layout;
 
@@ -53,11 +53,8 @@ namespace Timeline
 
                 isSelected = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(BackgroundColor));
             }
         }
-
-        public System.Windows.Media.Brush BackgroundColor => System.Windows.Media.Brushes.Red;
 
         private static Random random = new Random();
 
@@ -72,9 +69,21 @@ namespace Timeline
             }
         }
 
-        //public float MarkerWidth => 180f *zoomFactor/100f;
         public float MarkerWidth => (float)MarkerDuration.TotalSeconds * 45 * zoomFactor / 100f;
-        public TimeSpan LeftMargin { get; set; }
+
+        private TimeSpan leftMargin;
+        public TimeSpan LeftMargin
+        {
+            get { return leftMargin; }
+            set
+            {
+                leftMargin = value;
+                OnPropertyChanged(nameof(LeftMarginWidth));
+            }
+        }
+
+        public float LeftMarginWidth => (float)LeftMargin.TotalSeconds * 45 * zoomFactor / 100f;
+
         public TimeSpan StartTime { get; set; }
 
         public TimeSpan EndTime => StartTime + MarkerDuration;
@@ -111,6 +120,11 @@ namespace Timeline
             {
                 Text = i;
             });
+        }
+        
+        public void Dispose()
+        {
+            subscription?.Dispose();
         }
     }
 }

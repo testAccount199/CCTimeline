@@ -11,7 +11,7 @@ namespace Timeline
 
         private Caption lastSelectedCaption = null;
 
-        public Caption SelectedCaption
+        public Caption PlaybackCaption
         {
             get
             {
@@ -85,6 +85,26 @@ namespace Timeline
             }
 
             return timeline;
+        }
+
+        public void DeleteSelectedCaption()
+        {
+            if (lastSelectedCaption == null)
+            {
+                return;
+            }
+
+
+            this.Captions.Remove(lastSelectedCaption);
+            lastSelectedCaption.Dispose();
+            lastSelectedCaption = null;
+
+            var elapsed = TimeSpan.Zero;
+            foreach (var caption in Captions)
+            {
+                caption.LeftMargin = caption.StartTime - elapsed;
+                elapsed += caption.LeftMargin + caption.MarkerDuration;
+            }
         }
     }
 }

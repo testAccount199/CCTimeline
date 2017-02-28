@@ -8,11 +8,13 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         SizeChanged="MainWindow_OnSizeChanged"
         LocationChanged="MainWindow_OnLocationChanged"
-        Title="MainWindow" Height="350" Width="525">
+        KeyDown="MainWindow_OnKeyDown"
+        Title="MainWindow" Height="550" Width="825">
     <Window.Resources>
         <local:PlayButtonTextConverter x:Key="PlayButtonTextConverter"></local:PlayButtonTextConverter>
         <local:CaptionBackgroundColorConverter x:Key="CaptionBackgroundColorConverter"></local:CaptionBackgroundColorConverter>
         <local:CaptionForegroundColorConverter x:Key="CaptionForegroundColorConverter"></local:CaptionForegroundColorConverter>
+        <local:LeftMarginWidthConverter x:Key="LeftMarginWidthConverter"></local:LeftMarginWidthConverter>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,7 +34,7 @@
         </Grid>
         <Grid Grid.Row="2" DataContext="{Binding Timeline}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Name="ScrollViewer" ScrollChanged="ScrollViewer_OnScrollChanged" PreviewMouseDown="ScrollViewer_OnMouseDown">
-                <ItemsControl ItemsSource="{Binding Captions}">
+                <ItemsControl ItemsSource="{Binding Captions}" Width="10000">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"></StackPanel>
@@ -40,7 +42,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}" PreviewMouseDown="Caption_PreviewMouseDown">
+                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Margin="{Binding LeftMarginWidth, Converter={StaticResource LeftMarginWidthConverter}}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}" PreviewMouseDown="Caption_PreviewMouseDown">
                             <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="5" TextAlignment="Center" VerticalAlignment="Center" Foreground="{Binding IsSelected, Converter={StaticResource CaptionForegroundColorConverter}}" ></TextBlock>
                         </Border>
                     </DataTemplate>

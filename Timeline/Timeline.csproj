@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="CaptionForegroundColorConverter.cs" />
     <Compile Include="CaptionBackgroundColorConverter.cs" />
+    <Compile Include="LeftMarginWidthConverter.cs" />
     <Compile Include="Overlay.xaml.cs">
       <DependentUpon>Overlay.xaml</DependentUpon>
     </Compile>
