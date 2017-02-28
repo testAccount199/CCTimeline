@@ -43,7 +43,13 @@ namespace Timeline
             {
                 isPlaying = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsNotPlaying));
             }
+        }
+
+        public bool IsNotPlaying
+        {
+            get { return !IsPlaying; }
         }
 
         public MainWindow()
@@ -197,6 +203,16 @@ namespace Timeline
                     Timeline.DeleteSelectedCaption();
                 }
             }
+        }
+
+        private void Caption_MouseEnter(object sender, MouseEventArgs e)
+        {
+            this.Cursor = Cursors.SizeWE;
+        }
+
+        private void Caption_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.Cursor = null;
         }
     }
 

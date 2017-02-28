@@ -15,6 +15,7 @@
         <local:CaptionBackgroundColorConverter x:Key="CaptionBackgroundColorConverter"></local:CaptionBackgroundColorConverter>
         <local:CaptionForegroundColorConverter x:Key="CaptionForegroundColorConverter"></local:CaptionForegroundColorConverter>
         <local:LeftMarginWidthConverter x:Key="LeftMarginWidthConverter"></local:LeftMarginWidthConverter>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -24,8 +25,19 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Width="100" Margin="15" Content="{Binding IsPlaying, Converter={StaticResource PlayButtonTextConverter}}" Click="PlayPause" />
-            <Button Width="100" Margin="15" Click="Stop">Stop</Button>
+            <Button Width="100" Margin="15" Click="PlayPause" Visibility="{Binding IsNotPlaying, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Polygon Points="0,0 8,5, 0,10" Stroke="Black" Fill="Black" />
+            </Button>
+
+            <Button Width="100" Margin="15" Click="PlayPause" Visibility="{Binding IsPlaying, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Polygon Points="0,0 0,10 5,10 5,0" Stroke="Black" Fill="Black" />
+                    <Polygon Points="10,0 10,10 15,10 15,0" Stroke="Black" Fill="Black" />
+                </Grid>
+            </Button>
+            <Button Width="100" Margin="15" Click="Stop">
+                <Polygon Points="0,0 0,10 10,10 10,0" Stroke="Black" Fill="Black" />
+            </Button>
         </StackPanel>
         <Grid Grid.Row="1">
             <Border Name="WaveformBorder">
@@ -42,7 +54,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Margin="{Binding LeftMarginWidth, Converter={StaticResource LeftMarginWidthConverter}}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}" PreviewMouseDown="Caption_PreviewMouseDown">
+                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Margin="{Binding LeftMarginWidth, Converter={StaticResource LeftMarginWidthConverter}}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}" PreviewMouseDown="Caption_PreviewMouseDown" MouseEnter="Caption_MouseEnter" MouseLeave="Caption_MouseLeave">
                             <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="5" TextAlignment="Center" VerticalAlignment="Center" Foreground="{Binding IsSelected, Converter={StaticResource CaptionForegroundColorConverter}}" ></TextBlock>
                         </Border>
                     </DataTemplate>

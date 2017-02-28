@@ -21,10 +21,12 @@ namespace Timeline
             {
                 zoomFactor = i;
                 OnPropertyChanged(nameof(MarkerWidth));
+                OnPropertyChanged(nameof(LeftMarginWidth));
             });
 
             zoomFactor = _layout.Zoom;
             OnPropertyChanged(nameof(MarkerWidth));
+            OnPropertyChanged(nameof(LeftMarginWidth));
 
             MarkerDuration = TimeSpan.FromSeconds(4);
         }

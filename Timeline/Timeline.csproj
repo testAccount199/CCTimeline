@@ -89,6 +89,9 @@
     <Compile Include="Overlay.xaml.cs">
       <DependentUpon>Overlay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RootControl.xaml.cs">
+      <DependentUpon>RootControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TimelinePlayback.cs" />
     <Compile Include="TimelineLayout.cs" />
     <Page Include="MainWindow.xaml">
@@ -108,6 +111,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Overlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RootControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
