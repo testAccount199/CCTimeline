@@ -19,16 +19,7 @@ namespace Timeline
                 {
                     if (caption.EndTime >= _playback.Value && caption.StartTime <= _playback.Value)
                     {
-                        if (caption != lastSelectedCaption)
-                        {
-                            if (lastSelectedCaption != null)
-                            {
-                                lastSelectedCaption.IsSelected = false;
-                            }
-
-                            caption.IsSelected = true;
-                            lastSelectedCaption = caption;
-                        }
+                        SelectCaption(caption);
 
                         return caption;
                     }
@@ -40,6 +31,20 @@ namespace Timeline
                 }
 
                 return null;
+            }
+        }
+
+        public void SelectCaption(Caption caption)
+        {
+            if (caption != lastSelectedCaption)
+            {
+                if (lastSelectedCaption != null)
+                {
+                    lastSelectedCaption.IsSelected = false;
+                }
+
+                caption.IsSelected = true;
+                lastSelectedCaption = caption;
             }
         }
 

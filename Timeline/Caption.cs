@@ -29,7 +29,16 @@ namespace Timeline
             MarkerDuration = TimeSpan.FromSeconds(4);
         }
 
-        public string Text { get; set; }
+        private string text;
+        public string Text
+        {
+            get { return text; }
+            set
+            {
+                text = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool isSelected;
         public bool IsSelected
@@ -37,6 +46,11 @@ namespace Timeline
             get { return isSelected; }
             set
             {
+                if (!value)
+                {
+                    subscription?.Dispose();
+                }
+
                 isSelected = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(BackgroundColor));
@@ -87,6 +101,16 @@ namespace Timeline
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private IDisposable subscription;
+
+        public void UpdateText(IObservable<string> whenCaptionValueChanged)
+        {
+            subscription = whenCaptionValueChanged.Subscribe(i =>
+            {
+                Text = i;
+            });
         }
     }
 }

@@ -14,7 +14,7 @@
     <Grid>
         <Rectangle Fill="Red" Width=".3" Name="PlayerHead" HorizontalAlignment="Left"></Rectangle>
 
-        <TextBox Width="250" Height="40" VerticalAlignment="Bottom" Margin="10" Background="Black" Foreground="White" Opacity=".8" TextAlignment="Center" TextWrapping="Wrap" VerticalContentAlignment="Center" Text="{Binding CaptionValue}">
+        <TextBox Width="250" Height="40" VerticalAlignment="Bottom" Margin="10" Background="Black" Foreground="White" Opacity=".8" TextAlignment="Center" TextWrapping="Wrap" VerticalContentAlignment="Center" Text="{Binding CaptionValue}" TextChanged="TextBoxBase_OnTextChanged">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Value="3" Property="CornerRadius"></Setter>

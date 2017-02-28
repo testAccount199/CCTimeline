@@ -40,11 +40,9 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}">
-                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Foreground="{Binding IsSelected, Converter={StaticResource CaptionForegroundColorConverter}}"></TextBlock>
-                                <!--<TextBlock Text="{Binding Text}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Foreground="White"></TextBlock>-->
-
-                            </Border>
+                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}" PreviewMouseDown="Caption_PreviewMouseDown">
+                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="5" TextAlignment="Center" VerticalAlignment="Center" Foreground="{Binding IsSelected, Converter={StaticResource CaptionForegroundColorConverter}}" ></TextBlock>
+                        </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 </ItemsControl>

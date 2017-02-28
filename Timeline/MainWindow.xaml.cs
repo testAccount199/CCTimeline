@@ -169,5 +169,20 @@ namespace Timeline
                 PlayPause();
             }
         }
+
+        private void Caption_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (IsPlaying)
+            {
+                return;
+            }
+
+            var caption = (sender as Border).DataContext as Caption;
+            Timeline.SelectCaption(caption);
+
+            caption.UpdateText(overlay.WhenCaptionValueChanged);
+
+            overlay.CaptionValue = caption.Text;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,12 +47,20 @@ namespace Timeline
             }
         }
 
+        private Subject<string> whenCaptionValueChanged = new Subject<string>();
+        public IObservable<string> WhenCaptionValueChanged => whenCaptionValueChanged;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            whenCaptionValueChanged.OnNext((sender as TextBox).Text);
         }
     }
 }
