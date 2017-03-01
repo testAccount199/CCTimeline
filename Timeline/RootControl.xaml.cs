@@ -58,6 +58,9 @@ namespace Timeline
 
             InitializeComponent();
 
+            this.video.Position = TimeSpan.Zero;
+
+
             Playback.WhenTimeChanged.Subscribe(time =>
             {
                 var scrollPosition = TimelineLayout.GetScrollPosition(time);
@@ -127,6 +130,14 @@ namespace Timeline
         {
             IsPlaying = !IsPlaying;
             Playback.PlayPause();
+            if (isPlaying)
+            {
+                this.video.Play();
+            }
+            else
+            {
+                this.video.Pause();
+            }
         }
 
         private void Stop(object sender, RoutedEventArgs e)
@@ -134,6 +145,8 @@ namespace Timeline
             IsPlaying = false;
             Playback.Stop();
             ScrollTo(0);
+            this.video.Pause();
+            this.video.Position = TimeSpan.Zero;
         }
 
         private void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)

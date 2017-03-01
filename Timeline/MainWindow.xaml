@@ -11,6 +11,4 @@
         KeyDown="MainWindow_OnKeyDown"
         Title="MainWindow" Height="550" Width="825">
     <local:RootControl x:Name="root"></local:RootControl>
-
-
 </Window>

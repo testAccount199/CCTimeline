@@ -38,7 +38,9 @@
         </StackPanel>
         <Grid Grid.Row="1">
             <Border Name="WaveformBorder">
-                <WindowsFormsHost Name="Host"></WindowsFormsHost>
+                <MediaElement Name="video" 
+                              LoadedBehavior="Manual"
+                              Source="http://hubblesource.stsci.edu/sources/video/clips/details/images/hst_1.mpg" />
             </Border>
         </Grid>
         <Grid Grid.Row="2" DataContext="{Binding Timeline}">
