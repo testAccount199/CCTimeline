@@ -29,49 +29,18 @@ namespace Timeline
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public TimelineData Timeline { get; }
-
-        public TimelineLayout TimelineLayout { get; }
-        public TimelinePlayback Playback { get; }
-
-        private bool isPlaying = false;
-
-        public bool IsPlaying
-        {
-            get { return isPlaying; }
-            set
-            {
-                isPlaying = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsNotPlaying));
-            }
-        }
-
-        public bool IsNotPlaying
-        {
-            get { return !IsPlaying; }
-        }
-
         public MainWindow()
         {
-            TimelineLayout = new TimelineLayout();
-            Playback = new TimelinePlayback(TimeSpan.FromMinutes(3));
-            Timeline = TimelineData.FakeData(TimelineLayout, Playback);
-
             InitializeComponent();
 
-            Playback.WhenTimeChanged.Subscribe(time =>
+            this.root.WhenTimeChanged.Subscribe(time =>
             {
-                var scrollPosition = TimelineLayout.GetScrollPosition(time);
 
-                var playerHeadPosition = TimelineLayout.GetPlayerHeadPosition(time);
 
-                overlay.Set(playerHeadPosition);
+            });
 
-                ScrollTo(scrollPosition);
-
-                var caption = Timeline.PlaybackCaption;
-
+            this.root.WhenPlaybackCaptionChanged.Subscribe(caption =>
+            {
                 if (caption != null)
                 {
                     overlay.CaptionValue = caption.Text;
@@ -81,71 +50,39 @@ namespace Timeline
                     overlay.CaptionValue = "";
                 }
 
-                Thread.Sleep(100);
             });
 
-            var viewer = new WaveViewer();
-            viewer.BackColor = Color.LightGray;
-            viewer.WaveStream = new WaveFileReader(@"C:\Users\Amichai\Desktop\The Zahir.wav");
-
-            this.Host.Child = viewer;
-
-            TimelineLayout.WhenZoomChanged.Subscribe(zoom =>
+            this.root.WhenCaptionSelected.Subscribe(caption =>
             {
-                var scale = TimelineLayout.Zoom/100f;
-                viewer.SamplesPerPixel = (int)Math.Round(128 / scale);
+                caption.UpdateText(overlay.WhenCaptionValueChanged);
+
+                overlay.CaptionValue = caption.Text;
             });
 
             overlay.Show();
+
         }
 
-        private Overlay overlay = new Overlay();
-
-        private void ScrollTo(double position)
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
-            Dispatcher.Invoke(() =>
+            if (e.Key == Key.Delete && !this.root.IsPlaying)
             {
-                this.WaveformBorder.Margin = new Thickness(-position, 0, 0, 0);
 
-                this.ScrollViewer.ScrollToHorizontalOffset(position);
-            });
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void PlayPause(object sender, RoutedEventArgs e)
-        {
-            PlayPause();
-        }
-
-        private void PlayPause()
-        {
-            IsPlaying = !IsPlaying;
-            Playback.PlayPause();
-        }
-
-        private void Stop(object sender, RoutedEventArgs e)
-        {
-            IsPlaying = false;
-            Playback.Stop();
-            ScrollTo(0);
-        }
-
-        private void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            ScrollTo(ScrollViewer.HorizontalOffset);
+                var result = MessageBox.Show(this, "Are you sure you want to delete the selected caption?", "Warning", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    this.root.DeleteSelectedCaption();
+                }
+            }
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             PositionOverlay();
         }
+
+        private Overlay overlay = new Overlay();
+
 
         private void PositionOverlay()
         {
@@ -169,55 +106,18 @@ namespace Timeline
             PositionOverlay();
         }
 
-        private void ScrollViewer_OnMouseDown(object sender, MouseButtonEventArgs e)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-
-            if (IsPlaying)
-            {
-                PlayPause();
-            }
-        }
-
-        private void Caption_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (IsPlaying)
-            {
-                return;
-            }
-
-            var caption = (sender as Border).DataContext as Caption;
-            Timeline.SelectCaption(caption);
-
-            caption.UpdateText(overlay.WhenCaptionValueChanged);
-
-            overlay.CaptionValue = caption.Text;
-        }
-
-        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Delete && !IsPlaying)
-            {
-                var result = MessageBox.Show(this, "Are you sure you want to delete the selected caption?", "Warning", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
-                {
-                    Timeline.DeleteSelectedCaption();
-                }
-            }
-        }
-
-        private void Caption_MouseEnter(object sender, MouseEventArgs e)
-        {
-            this.Cursor = Cursors.SizeWE;
-        }
-
-        private void Caption_MouseLeave(object sender, MouseEventArgs e)
-        {
-            this.Cursor = null;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
 
-    ///TODO: Play/Pause/Stop button icons
+    ///TODO:
     /// Insert new caption
-    /// waveform background color
+    /// Drag caption
+    /// video playback
 }
