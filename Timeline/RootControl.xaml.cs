@@ -45,9 +45,25 @@ namespace Timeline
             }
         }
 
-        public bool IsNotPlaying
+        public bool IsNotPlaying => !IsPlaying;
+
+        private string captionValue;
+        public string CaptionValue
         {
-            get { return !IsPlaying; }
+            get { return captionValue; }
+            set
+            {
+                captionValue = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Subject<string> whenCaptionValueChanged = new Subject<string>();
+        public IObservable<string> WhenCaptionValueChanged => whenCaptionValueChanged;
+
+        private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            whenCaptionValueChanged.OnNext((sender as TextBox).Text);
         }
 
         public RootControl()
@@ -80,16 +96,16 @@ namespace Timeline
                 Thread.Sleep(100);
             });
 
-            //var viewer = new WaveViewer();
-            //viewer.BackColor = System.Drawing.Color.LightGray;
-            //viewer.WaveStream = new WaveFileReader(@"C:\Users\Amichai\Desktop\The Zahir.wav");
+            var viewer = new WaveViewer();
+            viewer.BackColor = System.Drawing.Color.LightGray;
+            viewer.WaveStream = new WaveFileReader(@"C:\Users\Amichai\Desktop\The Zahir.wav");
 
-            //this.Host.Child = viewer;
+            this.Host.Child = viewer;
 
             TimelineLayout.WhenZoomChanged.Subscribe(zoom =>
             {
                 var scale = TimelineLayout.Zoom / 100f;
-                //viewer.SamplesPerPixel = (int)Math.Round(128 / scale);
+                viewer.SamplesPerPixel = (int)Math.Round(128 / scale);
             });
         }
 
@@ -107,7 +123,7 @@ namespace Timeline
         {
             Dispatcher.Invoke(() =>
             {
-                //this.WaveformBorder.Margin = new Thickness(-position, 0, 0, 0);
+                this.WaveformBorder.Margin = new Thickness(-position, 0, 0, 0);
 
                 this.ScrollViewer.ScrollToHorizontalOffset(position);
             });

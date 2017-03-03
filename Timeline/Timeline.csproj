@@ -86,9 +86,6 @@
     <Compile Include="CaptionForegroundColorConverter.cs" />
     <Compile Include="CaptionBackgroundColorConverter.cs" />
     <Compile Include="LeftMarginWidthConverter.cs" />
-    <Compile Include="Overlay.xaml.cs">
-      <DependentUpon>Overlay.xaml</DependentUpon>
-    </Compile>
     <Compile Include="RootControl.xaml.cs">
       <DependentUpon>RootControl.xaml</DependentUpon>
     </Compile>
@@ -110,10 +107,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Overlay.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="RootControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

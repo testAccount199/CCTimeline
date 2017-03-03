@@ -33,34 +33,25 @@ namespace Timeline
         {
             InitializeComponent();
 
-            this.root.WhenTimeChanged.Subscribe(time =>
-            {
-
-
-            });
-
             this.root.WhenPlaybackCaptionChanged.Subscribe(caption =>
             {
                 if (caption != null)
                 {
-                    overlay.CaptionValue = caption.Text;
+                    root.CaptionValue = caption.Text;
                 }
                 else
                 {
-                    overlay.CaptionValue = "";
+                    root.CaptionValue = "";
                 }
 
             });
 
             this.root.WhenCaptionSelected.Subscribe(caption =>
             {
-                caption.UpdateText(overlay.WhenCaptionValueChanged);
+                caption.UpdateText(this.root.WhenCaptionValueChanged);
 
-                overlay.CaptionValue = caption.Text;
+                root.CaptionValue = caption.Text;
             });
-
-            overlay.Show();
-
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
@@ -74,36 +65,6 @@ namespace Timeline
                     this.root.DeleteSelectedCaption();
                 }
             }
-        }
-
-        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            PositionOverlay();
-        }
-
-        private Overlay overlay = new Overlay();
-
-
-        private void PositionOverlay()
-        {
-            if (this.Width > 14)
-            {
-                overlay.Width = this.Width - 14;
-            }
-            if (this.Height > 220)
-            {
-                overlay.Height = this.Height - 220;
-            }
-            overlay.Left = this.Left + 8;
-            overlay.Top = this.Top + 80;
-            overlay.Owner = this;
-
-            overlay.Activate();
-        }
-
-        private void MainWindow_OnLocationChanged(object sender, EventArgs e)
-        {
-            PositionOverlay();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

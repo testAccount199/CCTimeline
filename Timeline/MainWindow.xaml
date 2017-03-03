@@ -6,8 +6,6 @@
         xmlns:local="clr-namespace:Timeline"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        SizeChanged="MainWindow_OnSizeChanged"
-        LocationChanged="MainWindow_OnLocationChanged"
         KeyDown="MainWindow_OnKeyDown"
         Title="MainWindow" Height="550" Width="825">
     <local:RootControl x:Name="root"></local:RootControl>

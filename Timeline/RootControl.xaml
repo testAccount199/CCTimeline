@@ -19,6 +19,7 @@
             <RowDefinition Height="60"/>
             <RowDefinition />
             <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
@@ -37,13 +38,29 @@
             </Button>
         </StackPanel>
         <Grid Grid.Row="1">
-            <Border Name="WaveformBorder">
-                <MediaElement Name="video" 
+            <Border Margin="5">
+                <MediaElement Name="video"
                               LoadedBehavior="Manual"
                               Source="http://hubblesource.stsci.edu/sources/video/clips/details/images/hst_1.mpg" />
             </Border>
+
+
+            <TextBox Width="250" Height="50"
+                 VerticalAlignment="Bottom" Margin="10" Padding="5" Background="Black" Foreground="White" Opacity=".8" TextAlignment="Center" TextWrapping="Wrap" VerticalContentAlignment="Center" Text="{Binding CaptionValue}" TextChanged="TextBoxBase_OnTextChanged">
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Value="3" Property="CornerRadius"></Setter>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
         </Grid>
-        <Grid Grid.Row="2" DataContext="{Binding Timeline}">
+
+        <Grid Grid.Row="2">
+            <Border Name="WaveformBorder">
+                <WindowsFormsHost Name="Host"></WindowsFormsHost>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="3" DataContext="{Binding Timeline}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Name="ScrollViewer" ScrollChanged="ScrollViewer_OnScrollChanged" PreviewMouseDown="ScrollViewer_OnMouseDown">
                 <ItemsControl ItemsSource="{Binding Captions}" Width="10000">
                     <ItemsControl.ItemsPanel>
@@ -62,7 +79,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Grid Grid.Row="3" Background="DarkSlateBlue">
+        <Grid Grid.Row="4" Background="DarkSlateBlue">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
