@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
@@ -178,6 +179,13 @@ namespace Timeline
             }
         }
 
+        private Point? mouseDownPosition = null;
+        private TimeSpan startingMarginVal;
+        private Caption draggingCaption;
+        private Caption subsequentCaption;
+
+        private bool isDragging = false;
+
         private void Caption_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (IsPlaying)
@@ -189,6 +197,17 @@ namespace Timeline
             Timeline.SelectCaption(caption);
 
             whenCaptionSelected.OnNext(caption);
+
+            StartDragging(caption);
+        }
+
+        private void StartDragging(Caption caption)
+        {
+            mouseDownPosition = Mouse.GetPosition(this);
+            startingMarginVal = caption.StartTime + caption.LeftMargin;
+            draggingCaption = caption;
+            subsequentCaption = Timeline.NextCaption(draggingCaption);
+            isDragging = true;
         }
 
         private void Caption_MouseEnter(object sender, MouseEventArgs e)
@@ -204,6 +223,45 @@ namespace Timeline
         public void DeleteSelectedCaption()
         {
             Timeline.DeleteSelectedCaption();
+        }
+
+        private void Caption_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            StopDragging();
+        }
+
+        private void Caption_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void TimeLine_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            StopDragging();
+        }
+
+        private void StopDragging()
+        {
+            isDragging = false;
+        }
+
+        private void Timeline_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isDragging)
+            {
+                return;
+            }
+
+            var currentPosition = Mouse.GetPosition(this);
+
+            var diff = TimeSpan.FromMilliseconds((currentPosition.X - mouseDownPosition.Value.X)*20);
+
+            Timeline.SetCaptionStart(draggingCaption, startingMarginVal + diff);
+        }
+
+        private void Timeline_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            StopDragging();
         }
     }
 }

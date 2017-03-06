@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -73,13 +74,13 @@ namespace Timeline
 
         public float MarkerWidth => (float)MarkerDuration.TotalSeconds * 45 * zoomFactor / 100f;
 
-        private TimeSpan leftMargin;
+        private TimeSpan _leftMargin;
         public TimeSpan LeftMargin
         {
-            get { return leftMargin; }
+            get { return _leftMargin; }
             set
             {
-                leftMargin = value;
+                _leftMargin = value;
                 OnPropertyChanged(nameof(LeftMarginWidth));
             }
         }
@@ -123,10 +124,15 @@ namespace Timeline
                 Text = i;
             });
         }
-        
+
         public void Dispose()
         {
             subscription?.Dispose();
+        }
+
+        public override string ToString()
+        {
+            return $"Margin: {LeftMargin}, start: {StartTime}, duration: {MarkerDuration}, end: {EndTime}";
         }
     }
 }

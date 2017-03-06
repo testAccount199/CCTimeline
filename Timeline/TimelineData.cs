@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Timeline
 {
@@ -48,14 +50,46 @@ namespace Timeline
             }
         }
 
+        private void PrintCaptions(int count)
+        {
+            for (var i = 0; i < Math.Min(count, Captions.Count); i++)
+            {
+                Debug.Print($"{i}:");
+                Debug.Print(Captions[i].ToString());
+            }
+        }
+
         ///Update on layout changed event
-        private void Update()
+        public void Update()
         {
             var elapsed = TimeSpan.Zero;
             foreach (var caption in Captions)
             {
-                caption.StartTime = elapsed;
-                elapsed += caption.LeftMargin + caption.MarkerDuration;
+                caption.StartTime = elapsed + caption.LeftMargin;
+                elapsed += caption.MarkerDuration;
+            }
+        }
+
+        public void SetCaptionStart(Caption caption, TimeSpan start)
+        {
+            var next = NextCaption(caption);
+            var diff = start - caption.StartTime;
+
+            diff = TimeSpan.FromMilliseconds(Math.Max(0, diff.TotalMilliseconds));
+
+            var marginDiff = caption.LeftMargin - diff;
+
+            if (next != null && next.LeftMargin + marginDiff < TimeSpan.Zero)
+            {
+                diff += (next.LeftMargin + marginDiff);
+            }
+
+            marginDiff = caption.LeftMargin - diff;
+
+            caption.LeftMargin = diff;
+            if (next != null)
+            {
+                next.LeftMargin += marginDiff;
             }
         }
 
@@ -105,6 +139,18 @@ namespace Timeline
                 caption.LeftMargin = caption.StartTime - elapsed;
                 elapsed += caption.LeftMargin + caption.MarkerDuration;
             }
+        }
+
+        public Caption NextCaption(Caption draggingCaption)
+        {
+            var idx = Captions.IndexOf(draggingCaption);
+
+            if (idx >= Captions.Count - 1)
+            {
+                return null;
+            }
+
+            return Captions[idx + 1];
         }
     }
 }
