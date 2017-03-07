@@ -60,9 +60,12 @@
                 <WindowsFormsHost Name="Host"></WindowsFormsHost>
             </Border>
         </Grid>
-        <Grid Grid.Row="3" DataContext="{Binding Timeline}"
-              MouseLeave="TimeLine_OnMouseLeave" PreviewMouseMove="Timeline_PreviewMouseMove" PreviewMouseUp="Timeline_PreviewMouseUp">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Name="ScrollViewer" ScrollChanged="ScrollViewer_OnScrollChanged" PreviewMouseDown="ScrollViewer_OnMouseDown">
+        <Grid Grid.Row="3" DataContext="{Binding Timeline}" Cursor="Cross"
+                MouseLeave="TimeLine_OnMouseLeave" PreviewMouseMove="Timeline_PreviewMouseMove" 
+                PreviewMouseUp="Timeline_PreviewMouseUp">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" 
+                            Name="ScrollViewer" ScrollChanged="ScrollViewer_OnScrollChanged" 
+                            PreviewMouseDown="ScrollViewer_OnMouseDown">
                 <ItemsControl ItemsSource="{Binding Captions}" Width="10000">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -71,7 +74,8 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="Black" Height="80" BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Margin="{Binding LeftMarginWidth, Converter={StaticResource LeftMarginWidthConverter}}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}"
+                            <Border BorderBrush="Black" Height="80" Cursor="Hand"
+                                    BorderThickness="1" CornerRadius="5" Width="{Binding MarkerWidth}" Margin="{Binding LeftMarginWidth, Converter={StaticResource LeftMarginWidthConverter}}" Background="{Binding IsSelected, Converter={StaticResource CaptionBackgroundColorConverter}}"
                                     PreviewMouseDown="Caption_PreviewMouseDown" PreviewMouseUp="Caption_PreviewMouseUp" PreviewMouseMove="Caption_PreviewMouseMove"
                                     MouseEnter="Caption_MouseEnter" MouseLeave="Caption_MouseLeave">
                                 <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="5" TextAlignment="Center" VerticalAlignment="Center" Foreground="{Binding IsSelected, Converter={StaticResource CaptionForegroundColorConverter}}" ></TextBlock>
