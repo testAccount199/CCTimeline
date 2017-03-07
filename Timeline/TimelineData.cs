@@ -17,9 +17,10 @@ namespace Timeline
         {
             get
             {
+                int count = 0;
                 foreach (var caption in Captions)
                 {
-                    if (caption.EndTime >= _playback.Value && caption.StartTime <= _playback.Value)
+                    if(caption.StartTime <= _playback.Value && _playback.Value < caption.EndTime)
                     {
                         SelectCaption(caption);
 
@@ -50,30 +51,28 @@ namespace Timeline
             }
         }
 
-        private void PrintCaptions(int count)
-        {
-            for (var i = 0; i < Math.Min(count, Captions.Count); i++)
-            {
-                Debug.Print($"{i}:");
-                Debug.Print(Captions[i].ToString());
-            }
-        }
+        private int? lastSession = null;
 
-        ///Update on layout changed event
-        public void Update()
-        {
-            var elapsed = TimeSpan.Zero;
-            foreach (var caption in Captions)
-            {
-                caption.StartTime = elapsed + caption.LeftMargin;
-                elapsed += caption.MarkerDuration;
-            }
-        }
+        private TimeSpan sessionPosition;
 
-        public void SetCaptionStart(Caption caption, TimeSpan start)
+        public void SetCaptionStart(Caption caption, TimeSpan start, int dragSession)
         {
             var next = NextCaption(caption);
-            var diff = start - caption.StartTime;
+
+            TimeSpan start2;
+
+            if (lastSession == null || dragSession != lastSession.Value)
+            {
+                start2 = caption.StartTime;
+                sessionPosition = start2;
+                lastSession = dragSession;
+            }
+            else
+            {
+                start2 = sessionPosition;
+            }
+
+            var diff = start - start2;
 
             diff = TimeSpan.FromMilliseconds(Math.Max(0, diff.TotalMilliseconds));
 
@@ -85,8 +84,9 @@ namespace Timeline
             }
 
             marginDiff = caption.LeftMargin - diff;
-
             caption.LeftMargin = diff;
+            sessionPosition += caption.LeftMargin - diff;
+
             if (next != null)
             {
                 next.LeftMargin += marginDiff;
@@ -106,7 +106,6 @@ namespace Timeline
         public void AddCaption(Caption caption)
         {
             Captions.Add(caption);
-            Update();
         }
 
         public static TimelineData FakeData(TimelineLayout layout, TimelinePlayback playback)
@@ -115,7 +114,7 @@ namespace Timeline
 
             for (var i = 0; i < 30; i++)
             {
-                timeline.AddCaption(Caption.FakeData(layout));
+                timeline.AddCaption(Caption.FakeData(layout, timeline));
             }
 
             return timeline;
@@ -129,21 +128,32 @@ namespace Timeline
             }
 
 
+            var next = NextCaption(lastSelectedCaption);
+            if (next != null)
+            {
+                next.LeftMargin += lastSelectedCaption.LeftMargin + lastSelectedCaption.MarkerDuration;
+            }
+
             this.Captions.Remove(lastSelectedCaption);
+
+            next.LayoutUpdated();
+
+
             lastSelectedCaption.Dispose();
             lastSelectedCaption = null;
 
-            var elapsed = TimeSpan.Zero;
-            foreach (var caption in Captions)
-            {
-                caption.LeftMargin = caption.StartTime - elapsed;
-                elapsed += caption.LeftMargin + caption.MarkerDuration;
-            }
+
+            //var elapsed = TimeSpan.Zero;
+            //foreach (var caption in Captions)
+            //{
+            //    caption.LeftMargin = caption.StartTime - elapsed;
+            //    elapsed += caption.LeftMargin + caption.MarkerDuration;
+            //}
         }
 
-        public Caption NextCaption(Caption draggingCaption)
+        public Caption NextCaption(Caption caption)
         {
-            var idx = Captions.IndexOf(draggingCaption);
+            var idx = Captions.IndexOf(caption);
 
             if (idx >= Captions.Count - 1)
             {
@@ -151,6 +161,18 @@ namespace Timeline
             }
 
             return Captions[idx + 1];
+        }
+
+        public Caption PreviousCaption(Caption caption)
+        {
+            var idx = Captions.IndexOf(caption);
+
+            if (idx == 0)
+            {
+                return null;
+            }
+
+            return Captions[idx - 1];
         }
     }
 }

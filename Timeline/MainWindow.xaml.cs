@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,7 +47,9 @@ namespace Timeline
 
             });
 
-            this.root.WhenCaptionSelected.Subscribe(caption =>
+            IDisposable subscription;
+
+            subscription = this.root.WhenCaptionSelected.Subscribe(caption =>
             {
                 caption.UpdateText(this.root.WhenCaptionValueChanged);
 
@@ -76,9 +79,6 @@ namespace Timeline
         }
     }
 
-
     ///TODO:
     /// Insert new caption
-    /// Drag caption
-    /// video playback
 }

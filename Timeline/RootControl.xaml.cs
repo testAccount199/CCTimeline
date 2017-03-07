@@ -64,7 +64,14 @@ namespace Timeline
 
         private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            whenCaptionValueChanged.OnNext((sender as TextBox).Text);
+            var t = (sender as TextBox).Text;
+
+            if (t == string.Empty && IsPlaying)
+            {
+                return;
+            }
+
+            whenCaptionValueChanged.OnNext(t);
         }
 
         public RootControl()
@@ -91,7 +98,7 @@ namespace Timeline
                 whenTimeChanged.OnNext(time);
 
                 var caption = Timeline.PlaybackCaption;
-
+       
                 whenPlaybackCaptionChanged.OnNext(caption);
 
                 Thread.Sleep(100);
@@ -182,7 +189,6 @@ namespace Timeline
         private Point? mouseDownPosition = null;
         private TimeSpan startingMarginVal;
         private Caption draggingCaption;
-        private Caption subsequentCaption;
 
         private bool isDragging = false;
 
@@ -206,7 +212,6 @@ namespace Timeline
             mouseDownPosition = Mouse.GetPosition(this);
             startingMarginVal = caption.StartTime + caption.LeftMargin;
             draggingCaption = caption;
-            subsequentCaption = Timeline.NextCaption(draggingCaption);
             isDragging = true;
         }
 
@@ -232,7 +237,6 @@ namespace Timeline
 
         private void Caption_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-
         }
 
         private void TimeLine_OnMouseLeave(object sender, MouseEventArgs e)
@@ -243,7 +247,10 @@ namespace Timeline
         private void StopDragging()
         {
             isDragging = false;
+            sessionCount++;
         }
+
+        private int sessionCount = 0;
 
         private void Timeline_PreviewMouseMove(object sender, MouseEventArgs e)
         {
@@ -256,7 +263,7 @@ namespace Timeline
 
             var diff = TimeSpan.FromMilliseconds((currentPosition.X - mouseDownPosition.Value.X)*20);
 
-            Timeline.SetCaptionStart(draggingCaption, startingMarginVal + diff);
+            Timeline.SetCaptionStart(draggingCaption, startingMarginVal + diff, sessionCount);
         }
 
         private void Timeline_PreviewMouseUp(object sender, MouseButtonEventArgs e)
