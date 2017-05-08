@@ -1,0 +1,92 @@
+Unit tests for major components
+
+See if we can use the MediaPlayer playingCallback
+
+lastPlaybackCaption vs TimelineData.lastSelectedCaption - 
+
+SelectCaption should be able to handle null -
+
+Create two parallel branches for looping and not looping
+
+Unit testing
+
+Focus on first caption on startup -
+
+Very short timelines don't fill properly - 
+
+get rid of Caption.SecondsToWidthConversion - 
+Timespan to width - 
+
+Caption class should just be plain data - 
+
+
+
+
+Configure Assembly signing in cake file
+
+Selecting caption should move playhead
+
+
+---------
+
+- Navigate on selection
+- don't pause on seek
+- tab select should work if repeat mode is on
+- delete caption, overlay goes away
+- tab always jumps to right of playhead
+- gray out everything after the timeline ends
+Allow deeper zoom in, cap zoom out to max duration
+Max zoom should show one frame per tick
+- Caption start and duration values bound to status bar *
+- Status bar forecolor should be a gray not a white "start: {}, end: {}" *
+Gentle snap to default zoom - click line to get 100%
+
+scale drag velocity with zoom
+
+- Ribbon shortcut keys *
+
+- overlay on resize
+- click caption when playing
+
+
+- Zoom drag velocity bug fix * 
+ruler regime change bug
+ - add new caption *
+- selected caption color *
+- ruler forgeround color *
+
+- Ask about ruler foreground color - switch to main storyline timeline *
+Mountain zoom slider
+
+- clicking on caption should give focus to editable box* 
+
+- light selection blue instead of teal for selected caption
+
+- looping shouldn't turn off on selection (2 screenshots for each color)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Media1.mp4
+
+2016-03-27-2228-52.flv
+
+
+C:\Users\Amichai\Videos\Captures\Zoom Participant ID_ 36   Meeting ID_ 729-376-114 3_25_2016 4_38_05 PM.mp4
+
+
+
+"mediaInputPath:C:\Users\Amichai\Videos\Captures\Zoom Participant ID_ 36   Meeting ID_ 729-376-114 3_25_2016 4_38_05 PM.mp4" "closedCaptionsOutputPath:a"
